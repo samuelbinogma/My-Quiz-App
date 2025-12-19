@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'
 import './styles/global.css'
+import QuizStart from './components/QuizStart';
+import './styles/QuizStart.css';
 
 function App() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [quizStarted, setQuizStarted] = useState(false);
 
   useEffect(() => {
     //Fetch trivia categories
@@ -22,6 +25,24 @@ function App() {
         setLoading(false)
       })
   }, []);
+
+  const handleStartQuiz = (config) => {
+    console.log('Quiz starting with:', config);
+    setQuizStarted(true);
+  };
+
+  if (loading) {
+    return (
+      <div className='app'>
+        <header className='header'>
+          <h1>Quiz App</h1>
+        </header>
+        <main className='main'>
+          <p>Loading categories...</p>
+        </main>
+      </div>
+    );
+  }
 
   if (error) {
     return (
@@ -42,7 +63,7 @@ function App() {
         <h1>Quiz App</h1>
       </header>
       <main className="main">
-        <h2>Available Categories</h2>
+        {/* <h2>Available Categories</h2>
         <ul className="category-list">
           {categories.map(cat => (
             <li key={cat.id} className="category-item">
@@ -50,7 +71,13 @@ function App() {
             </li>
           ))}
         </ul>
-        <p>{categories.length}categories loaded successfully</p>
+        <p>{categories.length}categories loaded successfully</p> */}
+
+        {!quizStarted ? (
+          <QuizStart categories={categories} onStartQuiz={handleStartQuiz}/>
+        ) : (
+          <p>Quiz is starting soon! </p>
+        )}
       </main>
     </div>
   );
