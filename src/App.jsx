@@ -7,8 +7,24 @@ function App() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [quizStarted, setQuizStarted] = useState(false);
 
+  // New States for the quiz
+
+  const [quizStarted, setQuizStarted] = useState(false);
+  // To hold the fetched questions
+  const [questions, setQuestions] = useState([]);
+  //Shows loading while fetching questions
+  const [loadingQuestions, setLoadingQuestions] = useState(false) 
+  // To know which question we are on 
+  const [ currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  // Shows user's choice for the current question
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  // Number of correct answers so far
+  const [score, setScore] = useState(0);
+  // This sets to true when all questions are answered
+  const [quizFinished, setQuizFinished] = useState(false)
+
+  // This to fetch categories on start of the app
   useEffect(() => {
     //Fetch trivia categories
     fetch('https://opentdb.com/api_category.php')
@@ -27,9 +43,16 @@ function App() {
   }, []);
 
   const handleStartQuiz = (config) => {
-    console.log('Quiz starting with:', config);
     setQuizStarted(true);
+    setLoadingQuestions(true);
+    setQuestions([]);
+    setCurrentQuestionIndex(0);
+    setScore(0);
+    setSelectedAnswer(null);
+    setQuizFinished(false)
   };
+  
+  // Building the API URL with user's choices
 
   if (loading) {
     return (
