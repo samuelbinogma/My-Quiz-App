@@ -42,7 +42,7 @@ function App() {
       })
   }, []);
 
-  const handleStartQuiz = (config) => {
+  const handleStartQuiz = async (config) => {
     setQuizStarted(true);
     setLoadingQuestions(true);
     setQuestions([]);
@@ -50,35 +50,62 @@ function App() {
     setScore(0);
     setSelectedAnswer(null);
     setQuizFinished(false)
-  };
   
   // Building the API URL with user's choices
+    const apiURL = `https://opentdb.com/api.php?amount=${config.amount}&category=${config.category}
+      &difficulty=${config.difficulty}&type=multiple`;
+
+    try {
+      const response = await fetch(apiURL);
+      if (!response.ok) throw new Error('Failed to fetch questions');
+
+      const data = await response.json();
+
+      if (data.response_code !== 0) {
+        throw new Error('No questions found for this selection. Try different options');
+      }
+
+      setQuestions(data.results);
+      setLoadingQuestions(false);
+    } catch (err) {
+      setError(err.message);
+      setLoadingQuestions(false);
+      setQuizStarted(false);
+    }
+  };
+
+  const goToNextQuestion = () => {
+    setCurrentQuestionIndex(currentQuestionIndex + 1);
+    setSelectedAnswer(null);
+  };
+
+  let mainContent;
 
   if (loading) {
-    return (
-      <div className='app'>
-        <header className='header'>
-          <h1>Quiz App</h1>
-        </header>
-        <main className='main'>
-          <p>Loading categories...</p>
-        </main>
+    mainContent = <p>Loading categories...</p>;
+  } else if (error) {
+    mainContent = <p className='error'>Error: {error}</p>;
+  } else if (!quizStarted) {
+    mainContent = <QuizStart categories={categories} onStartQuiz={handleStartQuiz} />
+  } else if (loadingQuestions) {
+    mainContent = <p>Loading questions...</p>;
+  } else if (quizFinished) {
+    mainContent = <p>Quiz finished! Next is the results page.</p>;
+  } else {
+    const currentQuestion = questions[currentQuestionIndex];
+
+    mainContent = (
+      <div className='quiz-active'>
+        <div className='progress'>
+          Question {currentQuestion + 1} of {questions.length}
+        </div>
+        <h2 dangerouslySetInnerHTML={{ __html: currentQuestion.question }}></h2>
+        <p>Score: {score}</p>
+        <p>Select an answer below (would be building it later!)</p>
       </div>
-    );
+    )
   }
 
-  if (error) {
-    return (
-      <div className="app">
-        <header className="header">
-          <h1>Quiz App</h1>
-        </header>
-        <main className="main">
-          <p className="error">Error: {error}</p>
-        </main>
-      </div>
-    );
-  }
 
   return (
     <div className="app">
@@ -96,11 +123,13 @@ function App() {
         </ul>
         <p>{categories.length}categories loaded successfully</p> */}
 
-        {!quizStarted ? (
+        {/* {!quizStarted ? (
           <QuizStart categories={categories} onStartQuiz={handleStartQuiz}/>
         ) : (
           <p>Quiz is starting soon! </p>
-        )}
+        )} */}
+
+        {mainContent}
       </main>
     </div>
   );
