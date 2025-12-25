@@ -70,7 +70,17 @@ function QuestionCard({
                 </button>
             )}
 
-            
+            {isAnswered && question.correct_answer && (
+                <div className="explanation">
+                    <strong>Correct Answer:</strong>
+                    <span dangerouslySetInnerHTML={{ __html: question.correct_answer}} />
+                    {question.correct_answer !== selectedAnswer && selectedAnswer && (
+                        <span> (You picked: <span dangerouslySetInnerHTML={{ __html: selectedAnswer}}/>)</span>
+                    )}
+                </div>
+            )}
         </div>
     )
 }
+
+export default QuestionCard

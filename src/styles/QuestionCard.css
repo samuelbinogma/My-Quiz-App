@@ -1,0 +1,164 @@
+/* Main card - white box with shadow */
+.question-card {
+    background: white;
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Progress bar at top */
+.progress-bar {
+    background: #f0f4f8;
+    height: 12px;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-text {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #555;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #45a049);
+    transition: width 0.5s ease;
+}
+
+/* Question title */
+.question-text {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+    line-height: 1.5;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Score display */
+.current-score {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 2.5rem;
+    display: inline-block;
+}
+
+/* Container for all 4 answer buttons */
+.answers-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;  /* 2 columns, equal width */
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Each answer button */
+.answer-btn {
+    padding: 1.2rem 1.5rem;
+    font-size: 1.1rem;
+    border: 3px solid #e0e6ed;
+    border-radius: 15px;
+    background: #f8f9ff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: 500;
+}
+
+.answer-btn:hover:not(:disabled) {
+    border-color: #667eea;
+    background: #f0f4ff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+}
+
+.answer-btn:disabled {
+    cursor: not-allowed;
+}
+
+/* Selected answer (user clicked it) */
+.answer-btn.selected {
+    border-color: #667eea;
+    background: #667eea;
+    color: white;
+}
+
+/* Correct answer (green) */
+.answer-btn.correct {
+    border-color: #4CAF50;
+    background: #4CAF50;
+    color: white;
+}
+
+/* Wrong answer that user picked (red) */
+.answer-btn.wrong {
+    border-color: #f44336;
+    background: #f44336;
+    color: white;
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Shake animation for wrong answers */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Next button */
+.next-button {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    border: none;
+    padding: 1rem 3rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+.next-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4);
+}
+
+/* Explanation box at bottom */
+.explanation {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #f0f8f0;
+    border: 2px solid #4CAF50;
+    border-radius: 12px;
+    font-size: 1.1rem;
+}
+
+.explanation strong {
+    color: #2e7d32;
+}

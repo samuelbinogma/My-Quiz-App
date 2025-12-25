@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import './styles/global.css'
 import QuizStart from './components/QuizStart';
 import './styles/QuizStart.css';
+import './styles/QuestionCard.css'
+import QuestionCard from './components/QuestionCard';
 
 function App() {
   const [categories, setCategories] = useState([]);
@@ -23,6 +25,8 @@ function App() {
   const [score, setScore] = useState(0);
   // This sets to true when all questions are answered
   const [quizFinished, setQuizFinished] = useState(false)
+
+  const [isAnswered, setIsAnswered] = useState(false)
 
   // This to fetch categories on start of the app
   useEffect(() => {
@@ -49,7 +53,8 @@ function App() {
     setCurrentQuestionIndex(0);
     setScore(0);
     setSelectedAnswer(null);
-    setQuizFinished(false)
+    setQuizFinished(false);
+    setIsAnswered(false);
   
   // Building the API URL with user's choices
     const apiURL = `https://opentdb.com/api.php?amount=${config.amount}&category=${config.category}
@@ -74,9 +79,23 @@ function App() {
     }
   };
 
+  const handleSelectedAnswer = (answer) => {
+    setSelectedAnswer(answer);
+    setIsAnswered(true);
+
+    if (answer === questions[currentQuestionIndex].correct_answer) {
+      setScore(score + 1);
+    }
+  };
+
   const goToNextQuestion = () => {
-    setCurrentQuestionIndex(currentQuestionIndex + 1);
-    setSelectedAnswer(null);
+    if (currentQuestionIndex + 1 < questions.length) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setSelectedAnswer(null);
+      setIsAnswered(false);
+    } else {
+      setQuizFinished(true)
+    }
   };
 
   let mainContent;
@@ -88,22 +107,36 @@ function App() {
   } else if (!quizStarted) {
     mainContent = <QuizStart categories={categories} onStartQuiz={handleStartQuiz} />
   } else if (loadingQuestions) {
-    mainContent = <p>Loading questions...</p>;
+    mainContent = <div className='loading'>Loading questions...</div>;
   } else if (quizFinished) {
-    mainContent = <p>Quiz finished! Next is the results page.</p>;
-  } else {
-    const currentQuestion = questions[currentQuestionIndex];
-
     mainContent = (
-      <div className='quiz-active'>
-        <div className='progress'>
-          Question {currentQuestion + 1} of {questions.length}
+      <div className="quiz-finished">
+        <h2>Quiz Completed, Hurray!!!</h2>
+        <div className="final-score">
+          Your Score: {score} / {questions.length} ({Math.round((score / questions.length) * 100)}%)
         </div>
-        <h2 dangerouslySetInnerHTML={{ __html: currentQuestion.question }}></h2>
-        <p>Score: {score}</p>
-        <p>Select an answer below (would be building it later!)</p>
+        <button className='restart-button' onClick={() => setQuizStarted(false)}>
+          Take Another Quiz
+        </button>
       </div>
     )
+  } else {
+    const currentQuestion = questions[currentQuestionIndex];
+    const isCorrectAnswer = selectedAnswer === currentQuestion.correct_answer;
+
+    mainContent = (
+      <QuestionCard 
+        question={currentQuestion}
+        score={score}
+        currentQuestionIndex={currentQuestionIndex}
+        totalQuestions={questions.length}
+        onAnswerSelected={handleSelectedAnswer}
+        onNextQuestion={goToNextQuestion}
+        selectedAnswer={selectedAnswer}
+        isCorrectAnswer={isCorrectAnswer}
+        isAnswered={isAnswered}
+      />
+    );
   }
 
 
