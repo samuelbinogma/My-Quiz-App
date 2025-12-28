@@ -43,7 +43,13 @@ export function AuthProvider({ children }) {
 
     return (
         <AuthContext.Provider value={value}>
-            {!loading && children}
+            {!loading ? (
+                <div className="loading-screen">
+                    <p>Loading app...</p>
+                </div>
+            ) : ( 
+                children
+            )}
         </AuthContext.Provider>
     )
 } 
