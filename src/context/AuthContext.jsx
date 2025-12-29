@@ -16,6 +16,8 @@ export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true)
 
+    console.log('AuthProvider rendering, loading:', loading);
+
     function signup(email, password) {
         return createUserWithEmailAndPassword(auth, email, password);
     }
@@ -29,12 +31,15 @@ export function AuthProvider({ children }) {
     }
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) =>{
+        console.log('Setting up auth listener...');
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            console.log('Auth state changed: ', user ? user.email : 'no user');
             setCurrentUser(user);
             setLoading(false)
         });
 
-        return unsubscribe
+
+        return unsubscribe;
     }, []);
 
     const value = {
@@ -47,13 +52,15 @@ export function AuthProvider({ children }) {
 
     return (
         <AuthContext.Provider value={value}>
-            {!loading ? (
+            {loading ? (
                 <div className="loading-screen">
-                    <p>Loading app...</p>
+                    <div className="spinner">
+                        <p>Loading app...</p>
+                    </div>
                 </div>
             ) : ( 
                 children
             )}
         </AuthContext.Provider>
-    )
+    );
 } 

@@ -14,7 +14,21 @@ function Login() {
             await login(email, password);
             navigate('/quiz');
         } catch (error) {
-            alert('login failed: ' + error.message)
+            let message = 'Something went wrong. Try again.';
+
+            if (error.code === 'auth/invalid-credential') {
+                message = 'Incorrect email or password.';
+            } else if (error.code === 'auth/email-already-in-use') {
+                message = 'This email is already registered. Try logging in.';
+            } else if (error.code === 'auth/weak-password') {
+                message = 'Password should be at least 6 characters.';
+            } else if (error.code === 'auth/network-request-failed') {
+                message = 'Network error. Check your internet connection.';
+            } else {
+                message = error.message;
+            }
+
+            alert(message);
         }
     };
 
