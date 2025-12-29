@@ -5,22 +5,26 @@ import { useAuth } from '../context/AuthContext';
 function Signup() {
     const { signup } = useAuth();
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const email = e.target.email.value;
+        const email = e.target.email.value.trim();
         const password = e.target.password.value;
 
+        if (!email || !password) {
+            alert('Please fill in all fields');
+            return;
+        }
+
+        setLoading(true);
+
         try {
-            console.log('Trying to sign up with:', email);  // Temporary log
-            Signup(email, password);
-            console.log('Signup success!');  // If this logs, user created
+            await signup(email, password);
+            alert('Account created successfully!');
             navigate('/quiz');
         } catch (error) {
-            console.error('Signup failed:', error);  // Check console!
-            console.error('Error code:', error.code);
-            console.error('Error message:', error.message);
+            console.error('Signup failed:', error); 
             alert('Signup failed: ' + error.message);
         }
     };
@@ -39,6 +43,7 @@ function Signup() {
                             id='name'
                             placeholder='Jason Momoa'
                             required
+                            disabled={loading}
                         />
                     </div>
 
@@ -49,6 +54,7 @@ function Signup() {
                             id='email'
                             placeholder='jasonmomoa@gmail.com'
                             required
+                            disabled={loading}
                         />
                     </div>
 
@@ -59,11 +65,13 @@ function Signup() {
                             id='password'
                             placeholder='********'
                             required
+                            minLength="8"
+                            disabled={loading}
                         />
                     </div>
 
-                    <button type="submit" className="auth-button">
-                        Sign Up
+                    <button type="submit" className="auth-button" disabled={loading}>
+                        {loading ? 'Creating Account...' : 'Sign Up'}
                     </button>
                 </form>
 
