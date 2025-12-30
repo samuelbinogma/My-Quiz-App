@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { db } from '../firebase';
+import { collection, addDoc } from 'firebase/firestore';
 import QuizStart from '../components/QuizStart';
 import QuestionCard from '../components/QuestionCard';
 import '../styles/global.css'
@@ -118,46 +120,38 @@ function QuizPage() {
         }
     };
 
-    let mainContent;
+    const restartQuiz = () => {
+        setQuizStarted(false);
+        setQuizFinished(false);
+        setCurrentQuestionIndex(0);
+        setScore(0);
+        setQuestions([]);
+    };
 
-    if (loading) {
-        mainContent = <p>Loading categories...</p>;
-    } else if (error) {
-        mainContent = <p className='error'>Error: {error}</p>;
-    } else if (!quizStarted) {
-        mainContent = <QuizStart categories={categories} onStartQuiz={handleStartQuiz} />
-    } else if (loadingQuestions) {
-        mainContent = <div className='loading'>Loading questions...</div>;
-    } else if (quizFinished) {
-        mainContent = (
-        <div className="quiz-finished">
-            <h2>Quiz Completed, Hurray!!!</h2>
-            <div className="final-score">
-            Your Score: {score} / {questions.length} ({Math.round((score / questions.length) * 100)}%)
-            </div>
-            <button className='restart-button' onClick={() => setQuizStarted(false)}>
-            Take Another Quiz
-            </button>
-        </div>
-        )
-    } else {
-        const currentQuestion = questions[currentQuestionIndex];
-        const isCorrectAnswer = selectedAnswer === currentQuestion.correct_answer;
+    // Saving the score to Firebase/Firestore when quiz ends
+    useEffect(() => {
+        if (quizFinished && currentUser && questions.length > 0) {
+            const saveScore = async () => {
+                try {
+                    await addDoc(collection(db, 'scores'), {
+                        userId: currentUser.uid,
+                        userEmail: currentUser.email,
+                        score: score,
+                        total: questions.length,
+                        percentage: Math.round((score / questions.length) * 100),
+                        category: questions[0]?.category || 'Unknown',
+                        difficulty: questions[0]?.difficulty || 'Unknown',
+                        timestamp: new Date(),
+                    });
+                    console.log('Score saved to Firestore!')
+                } catch (err) {
+                    console.error('Failed to save score:', err)
+                }
+            };
+            saveScore();
+        }
+    }, [quizFinished, currentUser, questions, score]);
 
-        mainContent = (
-        <QuestionCard 
-            question={currentQuestion}
-            score={score}
-            currentQuestionIndex={currentQuestionIndex}
-            totalQuestions={questions.length}
-            onAnswerSelected={handleSelectedAnswer}
-            onNextQuestion={goToNextQuestion}
-            selectedAnswer={selectedAnswer}
-            isCorrectAnswer={isCorrectAnswer}
-            isAnswered={isAnswered}
-        />
-        );
-    }
 
 
     return (
