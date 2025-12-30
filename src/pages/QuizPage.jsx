@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import QuizStart from '../components/QuizStart';
 import QuestionCard from '../components/QuestionCard';
 import '../styles/global.css'
@@ -6,6 +8,24 @@ import '../styles/QuizStart.css'
 import '../styles/QuestionCard.css'
 
 function QuizPage() {
+    const { currentUser } = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!currentUser) {
+            navigate('/login');
+        }
+    }, [currentUser, navigate])
+
+    if (!currentUser) {
+        return (
+            <div className="loading-screen">
+                <p>Redirecting to login...</p>
+            </div>
+        );
+    }
+
+
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -146,22 +166,6 @@ function QuizPage() {
             <h1>Quiz App</h1>
         </header>
         <main className="main">
-            {/* <h2>Available Categories</h2>
-            <ul className="category-list">
-            {categories.map(cat => (
-                <li key={cat.id} className="category-item">
-                {cat.name}
-                </li>
-            ))}
-            </ul>
-            <p>{categories.length}categories loaded successfully</p> */}
-
-            {/* {!quizStarted ? (
-            <QuizStart categories={categories} onStartQuiz={handleStartQuiz}/>
-            ) : (
-            <p>Quiz is starting soon! </p>
-            )} */}
-
             {mainContent}
         </main>
         </div>

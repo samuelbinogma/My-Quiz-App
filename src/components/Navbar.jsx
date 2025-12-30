@@ -1,7 +1,17 @@
 import { Link, useLocation} from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function Navbar() {
-    const location = useLocation();
+    const { currentUser, logout } = useAuth();
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            alert('Logged out successfully!');
+        } catch (error) {
+            alert('Logout failed: ' + error.message);
+        }
+    };
 
     return (
         <nav className="navbar">
@@ -11,22 +21,28 @@ function Navbar() {
                 </Link>
 
                 <div className='navbar-links'>
-                    {location.pathname === '/' ? (
+                    {currentUser ? (
                         <>
-                            <Link to="/login" className="nav-btn">Login</Link>
-                            <Link to="/signup" className="nav-btn signup">Sign Up</Link>
+                            <span className='nav-text'>
+                                Hello, {currentUser.email}
+                            </span>
+                            <Link to='/quiz' className='nav-btn'>
+                                Play Quiz
+                            </Link>
+                            <button onClick={handleLogout} className="nav-btn logout">
+                                Logout
+                            </button>
                         </>
-                    ) : location.pathname === '/login' ? (
-                        <Link to="/signup" className='nav-btn signup'>Sign Up</Link>
-                    ) : location.pathname === '/signup' ? (
-                        <Link to="/login" className="nav-btn">Login</Link>
                     ) : (
-                        <Link to='/' className='nav-btn'>Home</Link>
-                    )} 
+                        <>
+                            <Link to="/login" className='nav-btn'>Login</Link>
+                            <Link to="/signup" className='nav-btn signup'>Sign Up</Link>
+                        </>
+                    )}
                 </div>
             </div>
         </nav>
-    )
+    );
 }
 
 export default Navbar;
