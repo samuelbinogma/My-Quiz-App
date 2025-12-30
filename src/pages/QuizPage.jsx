@@ -29,7 +29,7 @@ function QuizPage() {
 
 
     const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loadingCategories, setLoadingCategories] = useState(true);
     const [error, setError] = useState(null);
 
     // New States for the quiz
@@ -60,11 +60,11 @@ function QuizPage() {
         })
         .then(data => {
             setCategories(data.trivia_categories);
-            setLoading(false);
+            setLoadingCategories(false);
         })
         .catch(error => {
             setError(error.message);
-            setLoading(false)
+            setLoadingCategories(false)
         })
     }, []);
 
@@ -101,11 +101,8 @@ function QuizPage() {
         }
     };
 
-    const handleSelectedAnswer = (answer) => {
-        setSelectedAnswer(answer);
-        setIsAnswered(true);
-
-        if (answer === questions[currentQuestionIndex].correct_answer) {
+    const handleAnswerSelected = (userAnswer, correctAnswer) => {
+        if (userAnswer === correctAnswer) {
         setScore(score + 1);
         }
     };
@@ -113,8 +110,6 @@ function QuizPage() {
     const goToNextQuestion = () => {
         if (currentQuestionIndex + 1 < questions.length) {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
-        setSelectedAnswer(null);
-        setIsAnswered(false);
         } else {
         setQuizFinished(true)
         }

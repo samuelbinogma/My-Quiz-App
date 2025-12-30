@@ -29,6 +29,9 @@ function Navbar() {
                             <Link to='/quiz' className='nav-btn'>
                                 Play Quiz
                             </Link>
+                            <Link to='/dashboard' className='nav-btn'>
+                                My History
+                            </Link>
                             <button onClick={handleLogout} className="nav-btn logout">
                                 Logout
                             </button>

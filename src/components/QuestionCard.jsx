@@ -7,46 +7,52 @@ function QuestionCard({
     totalQuestions, 
     onAnswerSelected,
     onNextQuestion,
-    selectedAnswer,
-    isCorrectAnswer,
-    isAnswered
 }) {
     const [shuffledAnswers, setShuffledAnswers] = useState([]);
+    const [selectedAnswer, setSelectedAnswer] = useState(null);
+    const [showNextButton, setShowNextButton] = useState(false)
 
     useEffect(() => {
-        const correctAnswer = question.correct_answer;
-        const incorrectAnswers = question.incorrect_answers;
-        const allAnswers = [correctAnswer, ...incorrectAnswers];
+        setSelectedAnswer(null);
+        setShowNextButton(false);
 
-        const shuffled = allAnswers.sort(() => Math.random() - 0.5);
+
+        const correct = question.correct_answer;
+        const incorrect = question.incorrect_answers;
+        const all = [correct, ...incorrect];
+
+        const shuffled = [...all].sort(() => Math.random() - 0.5);
         setShuffledAnswers(shuffled);
     }, [question]);
 
     const handleAnswerClick = (answer) => {
-        onAnswerSelected(answer);
+        if (selectedAnswer !== null) return;
+
+        setSelectedAnswer(answer);
+
+        onAnswerSelected(answer, question.correct_answer);
+
+        setTimeout(() => {
+        setShowNextButton(true);
+            }, 1000)
     };
 
     if (!question) {
-        return <div>Loading question...</div>;
+        return <div>Loading question...</div>
     }
 
     return (
         <div className='question-card'>
             <div className='progress-bar'>
                 <div className='progress-text'>
-                    Question {currentQuestionIndex + 1} of {totalQuestions}
-                </div>
-                <div className="progress-fill"
-                    style={{ width: `${((currentQuestionIndex +1) / totalQuestions) * 100}%` }}  >
+                    <span>Question {currentQuestionIndex + 1} of {totalQuestions}</span>
+                    <span>Score: {score}</span>
                 </div>
             </div>
 
-            <h2 className='question-text'
-                dangerouslySetInnerHTML={{ __html: question.question }}>
-            </h2>
-            <div className="current-score">
-                Score: {score} / {currentQuestionIndex} answered
-            </div>
+            <div className='question-text'
+                dangerouslySetInnerHTML={{ __html: question.question }}
+            />
 
             <div className="answers-container">
                 {shuffledAnswers.map((answer, index) => (
@@ -54,23 +60,24 @@ function QuestionCard({
                         key={index}
                         className={`answer-btn
                             ${selectedAnswer === answer ? 'selected' : ''}
-                            ${isAnswered && answer === question.correct_answer ? 'correct' : ''}
-                            ${isAnswered && selectedAnswer === answer && answer !== question.correct_answer ? 'wrong' : ''}`}
+                            ${selectedAnswer && answer === question.correct_answer ? 'correct' : ''}
+                            ${selectedAnswer && answer !== question.correct_answer && selectedAnswer === answer ? 'incorrect' : ''}
+                        `}
+
                         onClick={() => handleAnswerClick(answer)}
                         dangerouslySetInnerHTML={{ __html: answer }}
-                        disabled={isAnswered}    
-                    >
-                    </button>
+                        disabled={selectedAnswer !== null}    
+                    />
                 ))}
             </div>
 
-            {isAnswered && (
+            {showNextButton && (
                 <button className='next-button' onClick={onNextQuestion}>
-                    {currentQuestionIndex + 1 === totalQuestions ? 'Finish Quiz' : 'Next Question'}
+                    Next Question
                 </button>
-            )}
+            )};
 
-            {isAnswered && question.correct_answer && (
+            {/* {isAnswered && question.correct_answer && (
                 <div className="explanation">
                     <strong>Correct Answer:</strong>
                     <span dangerouslySetInnerHTML={{ __html: question.correct_answer}} />
@@ -78,9 +85,9 @@ function QuestionCard({
                         <span> (You picked: <span dangerouslySetInnerHTML={{ __html: selectedAnswer}}/>)</span>
                     )}
                 </div>
-            )}
+            )} */}
         </div>
-    )
+    );
 }
 
 export default QuestionCard
