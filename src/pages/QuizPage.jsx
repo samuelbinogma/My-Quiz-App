@@ -153,12 +153,58 @@ function QuizPage() {
     }, [quizFinished, currentUser, questions, score]);
 
 
+    let mainContent; 
+
+    if (loadingCategories) {
+        mainContent = <p>Loading categories...</p>
+    } else if (error) {
+        mainContent = <p className='error'>Error: {error}</p>;
+    } else if (!quizStarted) {
+        mainContent = <QuizStart categories={categories} onStartQuiz={handleStartQuiz} />
+    } else if (loadingQuestions) {
+        mainContent = <p>Loading questions...</p>;
+    } else if (quizFinished) {
+        const percentage = Math.round((score / questions.length) * 100);
+
+        mainContent = (
+            <div className="quiz-finished">
+                <h2>Quiz Completed!</h2>
+                <div className="final-score">
+                    <p>
+                        Your Score: <strong>{score} / {questions.length}</strong>
+                    </p>
+                    <p className='percentage'>{percentage}%</p>
+                    <p>
+                        {percentage >= 80
+                            ? 'Excellent'
+                            : percentage >= 60
+                            ? 'Very Good'
+                            : percentage >= 40
+                            ? 'Not bad! Keep trying!'
+                            : 'Practice more!'
+                        }
+                    </p>
+                </div>
+                <button className='restart-button' onClick={restartQuiz}>
+                    Play Again
+                </button>
+            </div>
+        );
+    } else {
+        mainContent = (
+            <QuestionCard 
+                question={questions[currentQuestionIndex]}
+                onAnswerSelected={handleAnswerSelected}
+                onNextQuestion={goToNextQuestion}
+                currentQuestionIndex={currentQuestionIndex}
+                totalQuestions={questions.length}
+                score={score}
+            />
+        );
+    }
 
     return (
         <div className="quiz-app">
-        <header className="header">
-            <h1>Quiz App</h1>
-        </header>
         <main className="main">
             {mainContent}
         </main>
