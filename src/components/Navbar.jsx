@@ -16,7 +16,7 @@ function Navbar() {
     return (
         <nav className="navbar">
             <div className="navbar-container">
-                <Link to='/' className='navbar-logo'>
+                <Link className='navbar-logo'>
                     <h2>QuizMaster</h2>
                 </Link>
 
