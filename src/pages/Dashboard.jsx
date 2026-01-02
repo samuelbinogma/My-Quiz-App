@@ -19,7 +19,7 @@ function Dashboard() {
                         orderBy('timestamp', 'desc')
                     );
                     const querySnapshot = await getDocs(q);
-                    const userScores = querySnapshot.docs.mmap(doc => ({
+                    const userScores = querySnapshot.docs.map(doc => ({
                         id: doc.id,
                         ...doc.data(),
                         timestamp: doc.data().timestamp.toDate().toLocaleDateString()

@@ -16,7 +16,6 @@ function QuestionCard({
         setSelectedAnswer(null);
         setShowNextButton(false);
 
-
         const correct = question.correct_answer;
         const incorrect = question.incorrect_answers;
         const all = [correct, ...incorrect];

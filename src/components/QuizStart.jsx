@@ -5,7 +5,7 @@ function QuizStart({ categories, onStartQuiz }) {
     const [selectedDifficulty, setSelectedDifficulty] = useState('medium');
     const [numberOfQuestions, setnumberOfQuestions] = useState(10);
 
-    // Function for when yser clicks "Start Quiz"
+    // Function for when user clicks "Start Quiz"
     const handleStart = () => {
         if (!selectedCategory) {
             alert('Please select a category!');
