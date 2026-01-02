@@ -3,7 +3,7 @@
 A modern, responsive quiz application built with **React + Vite**, **Firebase Authentication**, and **Firestore**. Users can sign up, log in, play trivia quizzes powered by the [Open Trivia Database API](https://opentdb.com/), track their scores, and view personal quiz history.
 
 
-## Features ✨
+## Features 
 
 - **Real user authentication** (Email/Password) using Firebase
 - **Protected routes** — only logged-in users can play quizzes
@@ -17,7 +17,7 @@ A modern, responsive quiz application built with **React + Vite**, **Firebase Au
 - **Dashboard** to view past performance
 - **Clean, modern UI** with vanilla CSS (no frameworks)
 
-## Tech Stack 🛠️
+## Tech Stack 
 
 - **Frontend**: React 18 + Vite
 - **Styling**: Vanilla CSS (external stylesheets)
