@@ -24,7 +24,7 @@ function Navbar() {
         <nav className="navbar">
             <div className="navbar-container">
                 <Link className='navbar-logo'>
-                    <h2>QuizMaster</h2>
+                    <h2>QueryPopQuiz</h2>
                 </Link>
 
                 {/* Hamburger Button for mobile only */}
