@@ -10,6 +10,9 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f0f4f8;
     color: #333;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
     line-height: 1.6;
 }
 
@@ -19,12 +22,12 @@ body {
     flex-direction: column;
 }
 
-.header {
+.header, .navbar {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 2rem;
+    padding: 1rem;
     text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .header h1 {
@@ -143,20 +146,23 @@ h2 {
     margin: 0 auto;
     padding: 0 2rem;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 1rem;
     align-items: center;
 }
 
 .navbar-logo h2 {
-    color: white;
+    margin: 0;
     font-size: 1.8rem;
-    font-weight: 700;
+    color: #fff;
 }
 
 .navbar-links {
     display: flex;
-    gap: 1rem;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    justify-content: center;
+    text-decoration: none;
 }
 
 .nav-btn {
@@ -168,6 +174,7 @@ h2 {
     text-decoration: none;
     font-weight: 600;
     transition: all 0.3s ease;
+    min-width: 100px;
 }
 
 .nav-btn:hover {
@@ -425,4 +432,43 @@ h2 {
     padding: 1.5rem;
     border-radius: 16px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+
+/* Media Queries for responsiveness */
+@media (min-width: 768px) {
+    .navbar-container {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .hero h1 {
+        font-size: 3.5rem;
+    }
+
+    .hero-buttons {
+        flex-direction: row;
+    }
+
+    .features {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .scores-list {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    .main, .main-content {
+        padding: 2rem;
+    }
+
+    .auth-card {
+        padding: 3rem;
+    }
+
+    .quiz-finished, .quiz-start, .question-card {
+        padding: 3rem;
+    }
 }
