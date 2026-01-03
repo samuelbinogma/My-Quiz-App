@@ -4,7 +4,7 @@ function Home() {
     return (
         <div className="home-page">
             <div className="hero">
-                <h1>Welcome to QuizMaster</h1>
+                <h1>Welcome to QueryPopQuiz</h1>
                 <p>Test your knowledge with thousands of fun trivia questions!</p>
                 <div className="hero-buttons">
                     <Link to="/login" className="hero-btn primary">Login to Play</Link>
